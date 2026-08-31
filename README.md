@@ -28,28 +28,28 @@
 
 ## 新規プロジェクトへのコピー方法
 
-1. このフォルダをまるごと新しい場所へコピーする（`.git` は含めない）。
+1. **新しいプロジェクト用のリポジトリを作り、テンプレートの中身を持ってくる。** GitHub CLI（`gh`）を使う方法・使わない方法の両方を [`docs/development/本テンプレートPJをコピーする方法.md`](docs/development/本テンプレートPJをコピーする方法.md) にまとめてある。
 2. 次の 5 か所を書き換える。
 
-   | 場所 | 直すこと |
-   |---|---|
-   | `AGENTS.md` 冒頭 | `<PROJECT_NAME>` / `<PROJECT_SUMMARY>` |
-   | `AGENTS.md`「ポイント」 | 技術スタック（`<FRONTEND>` / `<BACKEND>` / `<DATABASE>` / `<DEPLOY_TARGET>`）・起動方法 |
-   | `package.json` | `name`、そのプロジェクトで使う依存とスクリプト |
-   | `docs/todo/TODO.md` | `<PROJECT_NAME>` と最初のタスク |
-   | `LICENSE` | 著作権者名（公開しないなら削除してよい） |
+| 場所 | 直すこと |
+|---|---|
+| `AGENTS.md` 冒頭 | `<PROJECT_NAME>` / `<PROJECT_SUMMARY>` |
+| `AGENTS.md`「ポイント」 | 技術スタック（`<FRONTEND>` / `<BACKEND>` / `<DATABASE>` / `<DEPLOY_TARGET>`）・起動方法 |
+| `package.json` | `name`、そのプロジェクトで使う依存とスクリプト |
+| `docs/todo/TODO.md` | `<PROJECT_NAME>` と最初のタスク |
+| `LICENSE` | 著作権者名（公開しないなら削除してよい） |
 
 3. 使わないものを削除する。**削除したら `AGENTS.md` の構成表・`REVIEW.md` §3 の該当行も消す。**
 
-   | 使わない場合 | 消すもの |
-   |---|---|
-   | 画面を持たない（CLI / API / バッチ） | `DESIGN.md`、`e2e/`、`playwright.config.ts`、`docs/skills/playwright-evidence-test.md` と 3 つの入口 |
-   | DB を使わない | `prisma/`、`docs/prisma_operations.md` |
-   | Prisma 以外の DB アクセスを使う | `prisma/AGENTS.md` を選んだ仕組みの規約へ書き換える |
+| 使わない場合                   | 消すもの                                                                                         |
+| ------------------------ | -------------------------------------------------------------------------------------------- |
+| 画面を持たない（CLI / API / バッチ） | `DESIGN.md`、`e2e/`、`playwright.config.ts`、`docs/skills/playwright-evidence-test.md` と 3 つの入口 |
+| DB を使わない                 | `prisma/`、`docs/prisma_operations.md`                                                        |
+| Prisma 以外の DB アクセスを使う    | `prisma/AGENTS.md` を選んだ仕組みの規約へ書き換える                                                          |
 
 4. `src/example/` を消して、自分のコードを書き始める。
 5. `pnpm install` → `pnpm lint && pnpm typecheck && pnpm test` が通ることを確認する。
-6. `git init` してコミットし、GitHub のリポジトリへ push する。
+6. 変更をコミットして push する（1 の手順で新しいリポジトリと `git remote` はすでに用意できている）。
 
 ```bash
 pnpm install && pnpm lint && pnpm typecheck && pnpm test

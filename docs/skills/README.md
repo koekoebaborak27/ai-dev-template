@@ -17,11 +17,11 @@
 1. [`_template.md`](_template.md) をコピーして `docs/skills/<name>.md` を作り、手順を書く。
 2. 3 ツール分の入口ファイルを作る。**中身は正本を読ませる 3〜5 行だけ**にする。
 
-   | ツール | 入口 | 起動方法 |
-   |---|---|---|
-   | Claude Code | `.claude/skills/<name>/SKILL.md` | `/<name>` または説明文による自動起動 |
-   | GitHub Copilot | `.github/prompts/<name>.prompt.md` | Copilot Chat で `/<name>` |
-   | Codex | `.agents/skills/<name>/SKILL.md` | 説明文による自動起動 |
+| ツール | 入口 | 起動方法 |
+|---|---|---|
+| Claude Code | `.claude/skills/<name>/SKILL.md` | `/<name>` または説明文による自動起動 |
+| GitHub Copilot | `.github/prompts/<name>.prompt.md` | Copilot Chat で `/<name>` |
+| Codex | `.agents/skills/<name>/SKILL.md` | 説明文による自動起動 |
 
 3. 入口ファイルの `description`（frontmatter）は、**どんなときに使うかが分かる日本語**で書く。Claude Code と Codex はこの説明文を見て自動起動を判断するため、ここが曖昧だと呼ばれない。
 4. `AGENTS.md`「スキル（作業手順）」の「導入済み」行と、この README の表に 1 行足す。

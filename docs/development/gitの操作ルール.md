@@ -100,11 +100,11 @@ A  docs/new.md           ← 新規ファイルをステージ済み
 2. タイトルと説明を入力し、`Create pull request`を押します。
 3. Pull Requestページの下部にあるチェック欄で、CIの結果を確認します。
 
-   | 表示 | 意味 |
-   | --- | --- |
-   | 🟡 Some checks haven't completed yet | 実行中。待ちます |
-   | 🟢 All checks have passed | 成功。マージしてよい状態です |
-   | 🔴 Some checks were not successful | 失敗。`Details`リンクからログを確認して修正します |
+| 表示 | 意味 |
+| --- | --- |
+| 🟡 Some checks haven't completed yet | 実行中。待ちます |
+| 🟢 All checks have passed | 成功。マージしてよい状態です |
+| 🔴 Some checks were not successful | 失敗。`Details`リンクからログを確認して修正します |
 
 4. 緑になったら`Merge pull request`→`Confirm merge`を押します。ボタン右側の`▼`から`Squash and merge`を選ぶと、ブランチ上の複数のコミットが1つにまとまって`main`へ入ります。
 5. マージ後に表示される**`Delete branch`ボタンを押します**。これでリモートのブランチが削除されます（押すまで残り続けます。誤って消しても`Restore branch`から復元できます）。
