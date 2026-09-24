@@ -33,7 +33,7 @@ git log --oneline -1     # 現在のコミット
 git status --porcelain   # 未コミット差分がないか確認
 ```
 
-- [ ] 1. 要件定義（→ [`docs/specs/`](../specs/README.md)）
+- [ ] 1. 要件定義（→ [`docs/specs/`](../specs/README.md)。画面遷移図が必要な場合は [`docs/diagrams.md`](../diagrams.md) の手順に従いmermaidで描く）
 - [ ] 2. 画面イメージ検討（必要かどうかを判断する。必要な場合は検討者が画像を用意してAIへ渡し、[`DESIGN.md`](../../DESIGN.md) の内容を刷新する）
 - [ ] 3. 基本設計（要件定義で定まっていない部分のみ。→ [`docs/specs/`](../specs/README.md)）
 - [ ] 4. 詳細設計（基本的には不要。基本設計で定まっていない部分のみ）
