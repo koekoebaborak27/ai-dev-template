@@ -35,11 +35,12 @@ git status --porcelain   # 未コミット差分がないか確認
 
 - [ ] 1. 要件定義（→ [`docs/specs/`](../specs/README.md)。画面遷移図が必要な場合は [`docs/diagrams.md`](../diagrams.md) の手順に従いmermaidで描く）
 - [ ] 2. 画面イメージ検討（必要かどうかを判断する。必要な場合は検討者が画像を用意してAIへ渡し、[`DESIGN.md`](../../DESIGN.md) の内容を刷新する）
-- [ ] 3. 基本設計（要件定義で定まっていない部分のみ。→ [`docs/specs/`](../specs/README.md)）
+- [ ] 3. 基本設計（要件定義で定まっていない部分のみ。→ [`docs/specs/`](../specs/README.md)。DB を使う場合はテーブル定義も作り、テーブル・カラムごとに物理名と論理名（日本語名）を併記する）
 - [ ] 4. 詳細設計（基本的には不要。基本設計で定まっていない部分のみ）
-- [ ] 5. 実装・単体ロジックテスト（1機能ずつ実装する。→ [`create-vitest-test`](../skills/create-vitest-test.md)）
-- [ ] 6. 画面テスト（必要かどうかを判断する。必要な場合は [`create-unit-test-spec`](../skills/create-unit-test-spec.md) でテスト仕様書を作成したうえで [`playwright-evidence-test`](../skills/playwright-evidence-test.md) を行う）
-- [ ] 7. ユーザテスト（必要かどうかを判断する）
+- [ ] 5. ローカル環境構築（DB を使う場合は Docker（`docker/docker-compose.yml`）で構築する。→ [`docs/prisma_operations.md`](../prisma_operations.md)）
+- [ ] 6. 実装・単体ロジックテスト（1機能ずつ実装する。→ [`create-vitest-test`](../skills/create-vitest-test.md)）
+- [ ] 7. 画面テスト（必要かどうかを判断する。必要な場合は [`create-unit-test-spec`](../skills/create-unit-test-spec.md) でテスト仕様書を作成したうえで [`playwright-evidence-test`](../skills/playwright-evidence-test.md) を行う）
+- [ ] 8. ユーザテスト（必要かどうかを判断する）
 
 ## 残っているタスク
 
