@@ -33,5 +33,5 @@
 - [ ] **依存方向**: `app → modules → shared` の一方向を守れているか（→ `src/AGENTS.md`）
 - [ ] **server-only**: サーバ専用コードにマーカーが付き、クライアントへ混入していないか（→ `src/AGENTS.md`）
 - [ ] **DB 命名規約**: 新規カラムが規約どおりか（→ `prisma/AGENTS.md`。Prisma 採用時）
-- [ ] **ログ境界**: 業務コードに `try/catch`・ログがなく、入口ラッパー経由で `throw new AppError(...)` のみか（→ `src/AGENTS.md`）
+- [ ] **ログ境界**: 業務コードにログがなく、`try/catch` は復旧・再試行・代替処理のときだけで、それ以外は入口ラッパー経由で `throw new AppError(...)` のみか（→ `src/AGENTS.md`）
 - [ ] **UI / 一覧**: `DESIGN.md` に従っているか（一覧/テーブル規約を含む → `DESIGN.md`。画面を持つプロジェクトのみ）

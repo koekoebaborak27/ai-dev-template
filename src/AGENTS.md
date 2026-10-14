@@ -6,25 +6,33 @@
 ## フィーチャーモジュラー（DDD-lite）
 
 - 機能（境界づけられたコンテキスト）ごとに `src/modules/<機能>/` に**縦割り**で完結させる。1機能=1フォルダ=レビュー単位。
-- **依存方向は一方向**: `app/ → modules/ → shared/`（逆流・横流れ禁止）。
+- **依存方向は一方向**: `app/ → modules/ → shared/`（逆流禁止。`modules/` 同士の参照は次項の公開 API 経由のみ可）。
 - `modules/A` は `modules/B` の内部を直接 import しない。**`modules/B/index.ts` の公開 API のみ**使う。
 - `app/`（画面やエンドポイントの入口）は**薄いアダプタ**。データを取得して module を呼び、描画・応答するだけ。ロジックを持たせない。
-- 認証ガード / 権限判定は入口の 1 か所に集約する。判定そのものは純粋関数（例: `modules/auth/route-guard.ts` の `decideRedirect`）に置き、入口はリクエストとの入出力変換に徹する（フレームワークの型抜きで分岐を網羅テストするため）。
+- 認証ガード / 権限判定のロジックは 1 か所に集約し、各入口から呼び出す。Proxy（middleware）による画面遷移の制御だけに頼らず、Server Action・Route Handler 等のサーバー側の入口ごとに必ず認証・認可を検証する（Proxy を通らない呼び出しや設定漏れがあっても守れるようにするため）。判定そのものは純粋関数（例: `modules/auth/route-guard.ts` の `decideRedirect`）に置き、入口はリクエストとの入出力変換に徹する（フレームワークの型抜きで分岐を網羅テストするため）。
 
 ## モジュール標準ファイル
 
 `ui/*.tsx`（画面）/ `actions.ts`（入口の処理）/ `service.ts`（ユースケース）/ `repository.ts`（DB I/O）/ `validation.ts`（入力検証）/ `types.ts` / `index.ts`（公開API）。
 
+- **ファイルは責務に応じて必要なものだけ作る。** DB を使わなければ `repository.ts` は不要、入力が無ければ `validation.ts` は不要。単純な処理なら `service.ts` を作らず `actions.ts` から `repository.ts` を直接呼んでよく、業務ロジックが増えた段階で `service.ts` へ分離する。
 - CRUD 機能は上記でフラットに。**複雑な機能のみ** `domain/ application/ infrastructure/ jobs/` に層化する（過剰設計を避ける）。
+
+## ファイル・関数の設計
+
+- ファイルごとの責務を明確にする。画面表示（`ui/`）・イベント処理（`actions.ts`）・業務ロジック（`service.ts`）・DB アクセス（`repository.ts`）を 1 ファイルに混ぜない。
+- ファイルや関数を不必要に細分化しない。数行で 1 か所からしか使わない処理は、呼び出し元に置く。
+- 変数名・関数名は役割が分かるものにする（例: `data` ではなく `searchConditions`）。
 
 ## 厳守事項
 
 - **DB アクセスは `repository.ts` と `shared/db` 以外から触らない**。
 - DB・シークレット等サーバ専用コードは、クライアントへ混入しない仕組みを入れる（例: Next.js なら `server-only` を import する）。
-- **観測性（ログ）**: 入口は `shared/observability` のラッパー（画面操作用・API 用・ジョブ用）でくるむ。業務コードに `try/catch` やログは**書かない**。エラーは `throw new AppError(code, httpStatus, userMessage, context)` するだけ（ログは境界が1回だけ出す）。生成は `shared/errors/app-error.ts` の `Errors` ファクトリを使う。`code` は grep 可能なキー文字列で、標準コードは `Errors.*`（`NOT_FOUND` / `UNAUTHORIZED` / `FORBIDDEN` / `VALIDATION_ERROR` / `CONFLICT`）、それ以外は独自キーを足してよい。
+- **観測性（ログ）**: 入口は `shared/observability` のラッパー（画面操作用・API 用・ジョブ用）でくるむ。業務コードにログは**書かない**。`try/catch` は例外からの復旧・再試行・代替処理を行う場合だけ使い、例外を握りつぶしたり、ログを出して投げ直したりしない（処理できない例外はそのまま投げる）。エラーは `throw new AppError(code, httpStatus, userMessage, context)` するだけ（ログは境界が1回だけ出す）。生成は `shared/errors/app-error.ts` の `Errors` ファクトリを使う。`code` は grep 可能なキー文字列で、標準コードは `Errors.*`（`NOT_FOUND` / `UNAUTHORIZED` / `FORBIDDEN` / `VALIDATION_ERROR` / `CONFLICT`）、それ以外は独自キーを足してよい。
 - 一覧 UI の規約は `DESIGN.md`「一覧（テーブル）」を正本とする。
 - **テスト**は対象ファイル隣にコロケーション（`<name>.test.ts`、`__tests__/` は原則作らない）。レイヤー選別・観点・分割方針の詳細は `TESTING.md`。
 
 ## フレームワーク固有（採用する場合のみ）
 
-- **Next.js**: ミドルウェアは `src/proxy.ts`（Next.js 16 で `middleware.ts` から改名・Node ランタイム）。**middleware から Server Action の POST をリダイレクトしない**（リダイレクトすると POST が転送先へ再送され、誘導先との間で往復し続ける）。ログイン済みユーザーの誘導は画面遷移（GET）でのみ行い、認可はメソッドを問わず適用する。サーバ専用コードには `server-only` を付ける（ただしワーカー等 Next.js の外から読まれるモジュールには付けない）。
+- **Next.js**: ミドルウェアは Next.js 16 以降なら `src/proxy.ts`（`middleware.ts` から改名・Node ランタイム）、15 以前なら `src/middleware.ts`。**middleware から Server Action の POST をリダイレクトしない**（リダイレクトすると POST が転送先へ再送され、誘導先との間で往復し続ける）。ログイン済みユーザーの誘導は画面遷移（GET）でのみ行い、認可はメソッドを問わず適用する。サーバ専用コードには `server-only` を付ける（ただしワーカー等 Next.js の外から読まれるモジュールには付けない）。
+- **Server Component / Client Component**: 既定は Server Component。`"use client"` は状態管理・イベント処理・ブラウザ API が必要なファイルだけに付ける。独自実装より Next.js 標準の仕組み（Server Action・`app/` ルーティング・標準の `fetch` 等）を優先する。

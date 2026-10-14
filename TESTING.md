@@ -25,7 +25,7 @@ lite-DDD はレイヤーで責務が違う。テストの優先度も変える�
 | `repository.ts`（DB アクセス） | △原則書かない | 複雑なクエリ・トランザクション境界のみ。単純 CRUD は書かない（ORM を信用） | DB 統合（後述） |
 | `ui/` | ✕当面スキップ | E2E に委譲。単体では原則書かない | — |
 
-**観測性との整合**: 業務コードは `try/catch`・ログを書かず `throw new AppError(...)` のみ（`src/AGENTS.md`）。したがって —
+**観測性との整合**: 業務コードはログを書かず、復旧・再試行・代替処理以外は `try/catch` も使わず `throw new AppError(...)` のみ（`src/AGENTS.md`）。したがって —
 - `service` のテストは「条件 → 正常戻り値 or AppError スロー」だけ見ればよい（副作用がなく書きやすい）。
 - ログ／エラー整形は入口ラッパー（`shared/observability`）のテストで**一度だけ**担保し、各 action で再テストしない。
 
